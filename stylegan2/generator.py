@@ -108,5 +108,15 @@ class Generator(tf.keras.Model):
         else:
             return image_out
 
+    def generate_from_w(self, w, truncation_psi=1.0, truncation_cutoff=None):
+        w_broadcasted = self.broadcast(w)
+        w_broadcasted = self.truncation_trick(w_broadcasted, truncation_psi, truncation_cutoff)
+        image_out = self.synthesis(w_broadcasted)
+        return image_out
+    
+    def generate_from_w_from_wspace(self, w):
+        image_out = self.synthesis(w)
+        return image_out
+
     def compute_output_shape(self, input_shape):
         return input_shape[0][0], 3, self.resolutions[-1], self.resolutions[-1]
